@@ -1,0 +1,16 @@
+{% if users_list %}
+	<table>
+	{% for user in users_list %}
+  		<tr>
+    		<td>{{ user.login }}</td>
+    		<td>{{ user.fullname }}</td>
+    		<td>{{ user.token }}</td>
+    		<td><button>edit</button></td>
+    		<td><button>delete</button></td>
+  		</tr>
+  	{% endfor %}
+	</table> 
+    <button>add</button>
+{% else %}
+    <p>No users are available.</p>
+{% endif %}
