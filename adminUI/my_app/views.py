@@ -10,9 +10,6 @@ def index(request):
     if 'delete' in request.POST:
     	user_id = request.POST['delete']
     	Users.objects.filter(id=user_id).delete()
-    if  'edit' in request.POST:
-    	id= request.POST['edit']
-    	return redirect('/users/edit/%s'%id)
     return render(request, 'my_app/index.html', context)
 
 def add(request):
