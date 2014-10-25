@@ -1,16 +1,24 @@
 {% if users_list %}
-	<table>
+	<form action="" method="POST">
+	{% csrf_token %}
+	<table border="1">
 	{% for user in users_list %}
   		<tr>
+  			<td>{{ user.id }}</td>
     		<td>{{ user.login }}</td>
     		<td>{{ user.fullname }}</td>
     		<td>{{ user.token }}</td>
-    		<td><button>edit</button></td>
-    		<td><button>delete</button></td>
+    		<td>{{ user.total_msg_counter }}</td>
+    		<td>{{ user.success_msg_counter }}</td>
+    		<td>{{ user.failed_msg_counter }}</td>
+    		<td><button name="edit" value="{{user.id}}">edit</button></td>
+    		<td><button name="delete" value="{{user.id}}">delete</button></td>
   		</tr>
   	{% endfor %}
 	</table> 
-    <button>add</button>
+    
+    </form>
+    <a href="{% url "add" %}"><button name="add">add</button></a>
 {% else %}
     <p>No users are available.</p>
 {% endif %}
