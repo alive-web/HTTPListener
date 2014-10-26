@@ -1,24 +1,35 @@
-{% if users_list %}
+<html>
+<head>
+{% load staticfiles %}
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="{% static "bower_components/bootstrap/dist/css/bootstrap.min.css" %}">
+</head>
+<body>
+<div class="container">
+	{% if users_list %}
 	<form action="" method="POST">
 	{% csrf_token %}
-	<table border="1">
-	{% for user in users_list %}
-  		<tr>
-  			<td>{{ user.id }}</td>
-    		<td>{{ user.login }}</td>
-    		<td>{{ user.fullname }}</td>
-    		<td>{{ user.token }}</td>
-    		<td>{{ user.total_msg_counter }}</td>
-    		<td>{{ user.success_msg_counter }}</td>
-    		<td>{{ user.failed_msg_counter }}</td>
-    		<td><a href="edit/{{ user.id }}"><button name="edit" type="button">edit</button></a></td>
-    		<td><button name="delete" value="{{user.id}}">delete</button></td>
-  		</tr>
-  	{% endfor %}
-	</table> 
-    
+
+		<table class="table table-striped">
+		{% for user in users_list %}
+  			<tr>
+  				<td>{{ user.id }}</td>
+    			<td>{{ user.login }}</td>
+    			<td>{{ user.fullname }}</td>
+    			<td>{{ user.token }}</td>
+    			<td>{{ user.total_msg_counter }}</td>
+    			<td>{{ user.success_msg_counter }}</td>
+    			<td>{{ user.failed_msg_counter }}</td>
+    			<td><a href="edit/{{ user.id }}"><button name="edit" type="button" class="btn btn-sm btn-warning">edit</button></a></td>
+    			<td><button name="delete" value="{{user.id}}" class="btn btn-sm btn-danger">delete</button></td>
+  			</tr>
+  		{% endfor %}
+		</table> 
     </form>
-    <a href="{% url "add" %}"><button name="add">add</button></a>
+    <a href="{% url "add" %}"><button name="add" class="btn btn-sm btn-primary">add</button></a>
 {% else %}
     <p>No users are available.</p>
 {% endif %}
+</div>
+</body>
+</html>
