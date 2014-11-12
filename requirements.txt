@@ -1,0 +1,5 @@
+Twisted-Core==13.0.0
+Twisted-Names==13.0.0
+Twisted-Web==13.0.0
+wsgiref==0.1.2
+zope.interface==4.0.5
