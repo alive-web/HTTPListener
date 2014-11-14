@@ -24,13 +24,13 @@ class HTTPListener(resource.Resource):
              token = token[0]
          triplet = ':'.join([uuid4().hex, token, message])
 
-         with open("/opt/lv128/HTTPListener/validation_queue.log", "a+") as validation_file:
+         with open("validation_queue.log", "a+") as validation_file:
              validation_file.write(triplet + '\n')
 
          log.msg(message)
          return "OK"
 
 
-log.startLogging(open('/opt/lv128/HTTPListener/requests.log', 'w'))
+log.startLogging(open('/opt/lv128/log/HTTPListener.log', 'w'))
 endpoints.serverFromString(reactor, "tcp:8080").listen(server.Site(HTTPListener()))
 reactor.run()
