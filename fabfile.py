@@ -1,7 +1,7 @@
 from fabric.api import put, run
 from fabvenv import Venv
 
-ROOT = "/opt/lv128/httplistener/"
+ROOT = "/opt/lv128/HTTPListener/"
 
 def deploy():
     venv = Venv(ROOT, "requirements.txt")
@@ -11,5 +11,5 @@ def deploy():
     put("http_listener.py", ROOT)
     put("http_listener.service", ROOT)
     run("sudo mv %s/http_listener.service /etc/systemd/system/" % ROOT)
-    run("sudo systemctl enable httplistener")
-    run("sudo systemctl restart httplistener")
+    run("sudo systemctl enable http_listener")
+    run("sudo systemctl restart http_listener")

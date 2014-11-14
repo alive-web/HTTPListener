@@ -1,5 +1,4 @@
-Twisted-Core==13.0.0
-Twisted-Names==13.0.0
-Twisted-Web==13.0.0
+Twisted==14.0.2
+argparse==1.2.1
 wsgiref==0.1.2
-zope.interface==4.0.5
+zope.interface==4.1.1
