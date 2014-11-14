@@ -1,7 +1,7 @@
 from fabric.api import put, run
 from fabvenv import Venv
 
-ROOT = "/opt/lv128/httplistener/"
+ROOT = "/opt/lv128/HTTPListener/"
 
 def deploy():
     venv = Venv(ROOT, "requirements.txt")

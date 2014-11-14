@@ -1,10 +1,10 @@
 [Unit]
-Description=LVWEB-128 http_listener
+Description=LVWEB-128 HTTP Listener
 
 [Service]
 User=deploy
 Group=deploy
-Environment="APPDIR=/opt/httplistener/"
+Environment="APPDIR=/opt/HTTPListener/"
 ExecStart=/bin/bash -c "source $APPDIR/bin/activate ; python $APPDIR/http_listener.py -l  \
 $APPDIR/../log/httplistener.log -p 8881"
 
