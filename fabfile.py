@@ -1,7 +1,8 @@
-from fabric.api import put, run
+from fabric.api import put, run ,env
 from fabvenv import Venv
 
 ROOT = "/opt/lv128/HTTPListener/"
+env.disable_known_hosts = True
 
 def deploy():
     venv = Venv(ROOT, "requirements.txt")
