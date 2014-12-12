@@ -11,7 +11,7 @@ QUEUE_VALIDATION = "validation.messages"
 COUNT = 1
 
 credentials = pika.PlainCredentials('lv128', 'lv128')
-parameters = pika.ConnectionParameters('localhost',
+parameters = pika.ConnectionParameters('lv128.tk',
                                        5672,
                                        '/',
                                        credentials)
@@ -39,7 +39,7 @@ class HTTPListener(resource.Resource):
         triplet = ':'.join([uuid4().hex, token, message])
         self.send_msg(QUEUE_VALIDATION, triplet)
         self.get_msg(QUEUE_HTTPLISTENER)
-        with open("validation_queue.log", "a+") as validation_file:
+        with open("/opt/lv128/log/validation_queue.log", "a+") as validation_file:
             validation_file.write(triplet + '\n')
         log.msg(message)
         return triplet  # for debugging
