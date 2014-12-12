@@ -1,0 +1,47 @@
+2014-12-12 19:48:49+0200 [-] Log opened.
+2014-12-12 19:48:49+0200 [-] Site starting on 8812
+2014-12-12 19:48:49+0200 [-] Starting factory <twisted.web.server.Site instance at 0x7f54fd894e60>
+2014-12-12 19:48:55+0200 [HTTPChannel,0,127.0.0.1] Response 200 - OK
+2014-12-12 19:51:00+0200 [HTTPChannel,0,127.0.0.1] Response 200 - OK
+2014-12-12 19:51:02+0200 [HTTPChannel,0,127.0.0.1] Response 200 - OK
+2014-12-12 19:51:54+0200 [HTTPChannel,0,127.0.0.1] Response 200 - OK
+2014-12-12 19:52:47+0200 [HTTPChannel,0,127.0.0.1] Received SIGINT, shutting down.
+2014-12-12 19:52:47+0200 [HTTPChannel,0,127.0.0.1] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/web/http.py", line 1439, in dataReceived
+	    finishCallback(data[contentLength:])
+	  File "/usr/lib/python2.7/dist-packages/twisted/web/http.py", line 1668, in _finishRequestBody
+	    self.allContentReceived()
+	  File "/usr/lib/python2.7/dist-packages/twisted/web/http.py", line 1731, in allContentReceived
+	    req.requestReceived(command, path, version)
+	  File "/usr/lib/python2.7/dist-packages/twisted/web/http.py", line 827, in requestReceived
+	    self.process()
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/web/server.py", line 189, in process
+	    self.render(resrc)
+	  File "/usr/lib/python2.7/dist-packages/twisted/web/server.py", line 238, in render
+	    body = resrc.render(self)
+	  File "/usr/lib/python2.7/dist-packages/twisted/web/resource.py", line 250, in render
+	    return m(request)
+	  File "http_listener.py", line 41, in render_POST
+	    self.get_msg(QUEUE_HTTPLISTENER)
+	  File "http_listener.py", line 63, in get_msg
+	    channel.basic_consume(self.callback, queue=my_queue)
+	  File "/usr/lib/python2.7/dist-packages/pika/channel.py", line 220, in basic_consume
+	    {'consumer_tag': consumer_tag})])
+	  File "/usr/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 1104, in _rpc
+	    self._wait_on_response(method_frame))
+	  File "/usr/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 1124, in _send_method
+	    self.connection.process_data_events()
+	  File "/usr/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 215, in process_data_events
+	    if self._handle_read():
+	  File "/usr/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 327, in _handle_read
+	    if self._read_poller.ready():
+	  File "/usr/lib/python2.7/dist-packages/pika/adapters/blocking_connection.py", line 62, in ready
+	    events = self.poller.poll(self.poll_timeout)
+	select.error: (4, 'Interrupted system call')
+	
+2014-12-12 19:52:47+0200 [HTTPChannel,0,127.0.0.1] "127.0.0.1" - - [12/Dec/2014:17:48:55 +0000] "POST / HTTP/1.1" 500 10327 "-" "PycURL/7.19.5 libcurl/7.37.1 GnuTLS/3.2.16 zlib/1.2.8 libidn/1.28 librtmp/2.3"
+2014-12-12 19:52:47+0200 [twisted.web.server.Site] (TCP Port 8812 Closed)
+2014-12-12 19:52:47+0200 [twisted.web.server.Site] Stopping factory <twisted.web.server.Site instance at 0x7f54fd894e60>
+2014-12-12 19:52:47+0200 [-] Main loop terminated.
