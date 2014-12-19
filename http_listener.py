@@ -63,6 +63,6 @@ class HTTPListener(resource.Resource):
         return body
             
 log.startLogging(open('/opt/lv128/log/HTTPListener.log', 'w'))
-endpoints.serverFromString(reactor, "tcp:8816").listen(server.Site(HTTPListener()))
+endpoints.serverFromString(reactor, "tcp:8812").listen(server.Site(HTTPListener()))
 reactor.run()
 
