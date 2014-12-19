@@ -22,8 +22,11 @@ class HTTPListener(resource.Resource):
     isLeaf = True
 
     def __init__(self):
-        self.connection = pika.BlockingConnection(parameters)
-        self.channel = self.connection.channel()
+        try:                                                      
+            self.connection = pika.BlockingConnection(parameters)
+            self.channel = self.connection.channel()
+        except:
+            raise
 
     def render_GET(self, request):
         request.setHeader("content-type", "text/plain")
