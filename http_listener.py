@@ -10,8 +10,8 @@ QUEUE_HTTPLISTENER = "httplistener"
 QUEUE_VALIDATION = "validation.messages"
 COUNT = 1
 
-credentials = pika.PlainCredentials('guest', 'guest')
-#credentials = pika.PlainCredentials('lv128', 'lv128')
+#credentials = pika.PlainCredentials('guest', 'guest')
+credentials = pika.PlainCredentials('lv128', 'lv128')
 parameters = pika.ConnectionParameters('localhost',
                                        5672,
                                        '/',
@@ -78,7 +78,7 @@ class HTTPListener(resource.Resource):
         self.channel.basic_qos(prefetch_count=COUNT)
         self.channel.basic_consume(self.callback, queue=my_queue)
 
-log.startLogging(open('HTTPListener.log', 'w'))
+log.startLogging(open('/opt/lv128/log/HTTPListener.log', 'w'))
 endpoints.serverFromString(reactor, "tcp:8812").listen(server.Site(HTTPListener()))
 reactor.run()
 
