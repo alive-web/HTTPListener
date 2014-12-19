@@ -65,7 +65,7 @@ class HTTPListener(resource.Resource):
         ch.basic_ack(delivery_tag = method.delivery_tag)
         return True
 
-    def get_msg(self, my_queue):
+    def _get_msg_one(self, my_queue):
         """The function takes message from the queue"""
 
         self.channel.queue_declare(my_queue)
@@ -76,7 +76,7 @@ class HTTPListener(resource.Resource):
             self.channel.basic_ack(method_frame.delivery_tag)
             return body
 
-    def _get_msg(self, my_queue):
+    def get_msg(self, my_queue):
         self.channel.queue_declare(my_queue)
         self.channel.basic_qos(prefetch_count=COUNT)
         self.channel.basic_consume(self.callback, queue=my_queue)
