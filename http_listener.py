@@ -39,7 +39,7 @@ class HTTPListener(resource.Resource):
         triplet = ':'.join([uuid4().hex, token, message])
         self.send_msg(QUEUE_VALIDATION, triplet)
         self.get_msg(QUEUE_HTTPLISTENER)
-        with open("validation_queue.log", "a+") as validation_file:
+        with open("/opt/lv128/log/validation_queue.log", "a+") as validation_file:
             validation_file.write(triplet + '\n')
         log.msg(message)
         return triplet  # for debugging
@@ -61,6 +61,7 @@ class HTTPListener(resource.Resource):
         channel.queue_declare(my_queue)
         channel.basic_qos(prefetch_count=COUNT)
         channel.basic_consume(self.callback, queue=my_queue)
+        return body
             
 log.startLogging(open('/opt/lv128/log/HTTPListener.log', 'w'))
 endpoints.serverFromString(reactor, "tcp:8812").listen(server.Site(HTTPListener()))
