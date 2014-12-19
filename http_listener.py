@@ -15,7 +15,11 @@ parameters = pika.ConnectionParameters('localhost',
                                        5672,
                                        '/',
                                        credentials)
-connection = pika.BlockingConnection(parameters)  
+try:
+    connection = pika.BlockingConnection(parameters)
+    channel = connection.channel()
+except:
+    raise
 
 class HTTPListener(resource.Resource):
     isLeaf = True
@@ -45,22 +49,23 @@ class HTTPListener(resource.Resource):
         return triplet  # for debugging
         
     def send_msg(self, my_queue, my_msg):
-        channel = connection.channel()
         channel.queue_declare(my_queue)
         channel.basic_publish(exchange='', routing_key=my_queue, body=str(my_msg))
         
     def callback(self, ch, method, properties, body):
         """this function consume messages and acknowledge them"""
-        
         log.msg(body)
         ch.basic_ack(delivery_tag = method.delivery_tag)
         return True
 
     def get_msg(self, my_queue):
-        channel = connection.channel()
-        channel.basic_qos(prefetch_count=COUNT)
-        channel.basic_consume(self.callback, queue=my_queue)
-        return body
+        try:
+            for method_frame, properties, body in self.channel.consume(my_queue):
+                self.channel.basic_ack(method_frame.delivery_tag)
+                return body
+        except pika.exceptions, err_msg:
+            log.msg(err_msg)
+            return False            
             
 log.startLogging(open('/opt/lv128/log/HTTPListener.log', 'w'))
 endpoints.serverFromString(reactor, "tcp:8812").listen(server.Site(HTTPListener()))
