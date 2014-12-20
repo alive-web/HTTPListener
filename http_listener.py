@@ -57,7 +57,7 @@ class HTTPListener(resource.Resource):
         return triplet  # for debugging
         
     def send_msg(self, my_queue, my_msg):
-        sel.channel.queue_declare(my_queue)
+        self.channel.queue_declare(my_queue)
         self.channel.basic_publish(exchange='', routing_key=my_queue, body=str(my_msg))
         
     def callback(self, ch, method, properties, body):
@@ -69,7 +69,7 @@ class HTTPListener(resource.Resource):
 
     def get_msg(self, my_queue):
         self.channel.basic_qos(prefetch_count=COUNT)
-        self.channel.basic_consume(self.callback, queue=my_queue)
+        body = self.channel.basic_consume(self.callback, queue=my_queue)
         return body
             
 log.startLogging(open('/opt/lv128/log/HTTPListener.log', 'w'))
