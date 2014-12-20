@@ -65,7 +65,7 @@ class HTTPListener(resource.Resource):
         
         log.msg(body)
         ch.basic_ack(delivery_tag = method.delivery_tag)
-        #return True
+        return True
 
     def get_msg(self, my_queue):
         self.channel.basic_qos(prefetch_count=COUNT)
