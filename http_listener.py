@@ -5,8 +5,8 @@ from twisted.web import server, resource
 from twisted.python import log
 from twisted.internet import reactor, endpoints
 import pika
-from time
-from time import sleep
+#from time
+#from time import sleep
 
 QUEUE_HTTPLISTENER = "httplistener"
 QUEUE_VALIDATION = "validation.messages"
