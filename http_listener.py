@@ -64,6 +64,7 @@ class HTTPListener(resource.Resource):
 
     def get_msg(self, my_queue):
         try:
+            channel.basic_qos(prefetch_count=1)
             for method_frame, properties, body in self.channel.consume(my_queue):
                 self.channel.basic_ack(method_frame.delivery_tag)
                 return body
