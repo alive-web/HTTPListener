@@ -68,7 +68,7 @@ class HTTPListener(resource.Resource):
         #return True
 
     def get_msg(self, my_queue):
-        #self.channel.basic_qos(prefetch_count=COUNT)
+        self.channel.basic_qos(prefetch_count=COUNT)
         self.channel.basic_consume(self.callback, queue=my_queue)
         return "OK"
             
