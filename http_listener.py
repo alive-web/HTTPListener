@@ -52,7 +52,7 @@ class HTTPListener(resource.Resource):
             token = token[0]
         triplet = ':'.join([uuid4().hex, token, message])
         self.send_msg(QUEUE_VALIDATION, triplet)
-        time.sleep(0.3)
+        #time.sleep(0.3)
         self.get_msg(QUEUE_HTTPLISTENER)
         with open("/opt/lv128/log/validation_queue.log", "a+") as validation_file:
             validation_file.write(triplet + '\n')
