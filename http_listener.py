@@ -10,19 +10,23 @@ QUEUE_HTTPLISTENER = "httplistener"
 QUEUE_VALIDATION = "validation.messages"
 COUNT = 1
 
-credentials = pika.PlainCredentials('lv128', 'lv128')
-parameters = pika.ConnectionParameters('localhost',
-                                       5672,
-                                       '/',
-                                       credentials)
-try:
-    connection = pika.BlockingConnection(parameters)
-    channel = connection.channel()
-except:
-    raise
+
+
 
 class HTTPListener(resource.Resource):
     isLeaf = True
+    
+    def __init__(self):
+        credentials = pika.PlainCredentials('lv128', 'lv128')
+        parameters = pika.ConnectionParameters('localhost',
+                                       5672,
+                                       '/',
+                                       credentials)
+        try:
+            self.connection = pika.BlockingConnection(parameters)
+            self.channel = self.connection.channel()
+        except:
+            raise
 
     def render_GET(self, request):
         request.setHeader("content-type", "text/plain")
@@ -49,8 +53,8 @@ class HTTPListener(resource.Resource):
         return triplet  # for debugging
         
     def send_msg(self, my_queue, my_msg):
-        channel.queue_declare(my_queue)
-        channel.basic_publish(exchange='', routing_key=my_queue, body=str(my_msg))
+        self.channel.queue_declare(my_queue)
+        self.channel.basic_publish(exchange='', routing_key=my_queue, body=str(my_msg))
         
     def callback(self, ch, method, properties, body):
         """this function consume messages and acknowledge them"""
