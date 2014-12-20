@@ -12,12 +12,6 @@ QUEUE_HTTPLISTENER = "httplistener"
 QUEUE_VALIDATION = "validation.messages"
 COUNT = 1
 
-credentials = pika.PlainCredentials('lv128', 'lv128')
-parameters = pika.ConnectionParameters('localhost',
-                                       5672,
-                                       '/',
-                                       credentials)
-connection = pika.BlockingConnection(parameters)  
 
 class HTTPListener(resource.Resource):
     isLeaf = True
