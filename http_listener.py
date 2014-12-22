@@ -53,9 +53,9 @@ class HTTPListener(resource.Resource):
         log.msg(message)
         resp = self.get_msg(QUEUE_HTTPLISTENER)
         if resp == "Response 200 - OK":
-            return "OK"
+            return "Response 200 - OK"
         else:
-            return resp
+            return "Test response"
         
     def send_msg(self, my_queue, my_msg):
         self.channel.queue_declare(my_queue)
