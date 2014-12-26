@@ -52,10 +52,7 @@ class HTTPListener(resource.Resource):
             validation_file.write(triplet + '\n')
         log.msg(message)
         resp = self.get_msg(QUEUE_HTTPLISTENER)
-        if resp == "Response 200 - OK":
-            return "Response 200 - OK"
-        else:
-            return "Test response"
+        return resp
         
     def send_msg(self, my_queue, my_msg):
         self.channel.queue_declare(my_queue)
@@ -70,8 +67,8 @@ class HTTPListener(resource.Resource):
 
     def get_msg(self, my_queue):
         self.channel.basic_qos(prefetch_count=COUNT)
-        self.channel.basic_consume(self.callback, queue=my_queue)
-        return "Response"
+        response = self.channel.basic_consume(self.callback, queue=my_queue)
+        return response
             
 log.startLogging(open('/opt/lv128/log/HTTPListener.log', 'w'))
 endpoints.serverFromString(reactor, "tcp:8812").listen(server.Site(HTTPListener()))
