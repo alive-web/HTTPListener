@@ -47,29 +47,36 @@ class HTTPListener(resource.Resource):
         triplet = ':'.join([uuid4().hex, token, message])
         self.send_msg(QUEUE_VALIDATION, triplet)
         #time.sleep(0.3)
-        
+
         with open("/opt/lv128/log/validation_queue.log", "a+") as validation_file:
             validation_file.write(triplet + '\n')
         log.msg(message)
         resp = self.get_msg(QUEUE_HTTPLISTENER)
-        return resp
-        
+
+        log.msg(resp)
+        if resp:
+            code, msg = resp.split('|')
+            request.setResponseCode(int(code))
+            return msg
+
+
     def send_msg(self, my_queue, my_msg):
         self.channel.queue_declare(my_queue)
         self.channel.basic_publish(exchange='', routing_key=my_queue, body=str(my_msg))
-        
-    def callback(self, ch, method, properties, body):
-        """this function consume messages and acknowledge them"""
-        
-        log.msg(body)
-        ch.basic_ack(delivery_tag = method.delivery_tag)
-        return True
 
     def get_msg(self, my_queue):
-        self.channel.basic_qos(prefetch_count=COUNT)
-        response = self.channel.basic_consume(self.callback, queue=my_queue)
-        return response
-            
+        """The function takes message from the queue"""
+
+        self.channel.queue_declare(my_queue)
+        try:
+            for method_frame, properties, body in self.channel.consume(my_queue):
+                self.channel.basic_ack(method_frame.delivery_tag)
+                return body
+        except pika.exceptions, err_msg:
+            log.error(err_msg)
+            return False
+
+
 log.startLogging(open('/opt/lv128/log/HTTPListener.log', 'w'))
 endpoints.serverFromString(reactor, "tcp:8812").listen(server.Site(HTTPListener()))
 reactor.run()
