@@ -6,8 +6,14 @@ from twisted.python import log
 from twisted.internet import reactor, endpoints
 import pika
 
+CRED = 'lv128'
+HOST = 'localhost'
+RABBITMQ_PORT = 5672
 QUEUE_HTTPLISTENER = "httplistener"
 QUEUE_VALIDATION = "validation.messages"
+LOG_PATH_1 = "/opt/lv128/log/validation_queue.log"
+LOG_PATH_2 = '/opt/lv128/log/HTTPListener.log'
+PORT = "tcp:8812"
 COUNT = 1
 
 
@@ -15,9 +21,9 @@ class HTTPListener(resource.Resource):
     isLeaf = True
 
     def __init__(self):
-        credentials = pika.PlainCredentials('lv128', 'lv128')
-        parameters = pika.ConnectionParameters('localhost',
-                                       5672,
+        credentials = pika.PlainCredentials(CRED, CRED)
+        parameters = pika.ConnectionParameters(HOST,
+                                       RABBITMQ_PORT,
                                        '/',
                                        credentials)
         try:
@@ -47,7 +53,7 @@ class HTTPListener(resource.Resource):
             token = token[0]
         triplet = ':'.join([uuid4().hex, token, message])
         self.send_msg(QUEUE_VALIDATION, triplet)
-        with open("/opt/lv128/log/validation_queue.log", "a+") as validation_file:
+        with open(LOG_PATH_1, "a+") as validation_file:
             validation_file.write(triplet + '\n')
         log.msg(message)
         resp = self.get_msg(QUEUE_HTTPLISTENER)
@@ -78,6 +84,6 @@ class HTTPListener(resource.Resource):
             return False
 
 
-log.startLogging(open('/opt/lv128/log/HTTPListener.log', 'w'))
-endpoints.serverFromString(reactor, "tcp:8812").listen(server.Site(HTTPListener()))
+log.startLogging(open(LOG_PATH_2, 'w'))
+endpoints.serverFromString(reactor, PORT).listen(server.Site(HTTPListener()))
 reactor.run()
