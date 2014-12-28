@@ -11,11 +11,9 @@ QUEUE_VALIDATION = "validation.messages"
 COUNT = 1
 
 
-
-
 class HTTPListener(resource.Resource):
     isLeaf = True
-    
+
     def __init__(self):
         credentials = pika.PlainCredentials('lv128', 'lv128')
         parameters = pika.ConnectionParameters('localhost',
@@ -37,6 +35,9 @@ class HTTPListener(resource.Resource):
         return "OK-GET"
 
     def render_POST(self, request):
+    	"""
+    	The function listens to POST-request from client and return valid message
+    	"""
         request.setHeader("content-type", "text/plain")
         message = request.args.get("msg", "")
         token = request.args.get("token", "")
@@ -46,33 +47,37 @@ class HTTPListener(resource.Resource):
             token = token[0]
         triplet = ':'.join([uuid4().hex, token, message])
         self.send_msg(QUEUE_VALIDATION, triplet)
-        self.get_msg(QUEUE_HTTPLISTENER)
         with open("/opt/lv128/log/validation_queue.log", "a+") as validation_file:
             validation_file.write(triplet + '\n')
         log.msg(message)
-        return triplet  # for debugging
-        
+        resp = self.get_msg(QUEUE_HTTPLISTENER)
+        log.msg(resp)
+        if resp:
+            code, msg = resp.split('|')
+            request.setResponseCode(int(code))
+            return msg
+
     def send_msg(self, my_queue, my_msg):
+    	"""
+    	The function declares a queue and send message there
+    	"""
         self.channel.queue_declare(my_queue)
         self.channel.basic_publish(exchange='', routing_key=my_queue, body=str(my_msg))
-        
-    def callback(self, ch, method, properties, body):
-        """this function consume messages and acknowledge them"""
-        log.msg(body)
-        ch.basic_ack(delivery_tag = method.delivery_tag)
-        return True
 
     def get_msg(self, my_queue):
+        """
+        The function takes message from the queue
+        """
+        channel.basic_qos(prefetch_count=COUNT)
         try:
-            self.channel.basic_qos(prefetch_count=1)
             for method_frame, properties, body in self.channel.consume(my_queue):
                 self.channel.basic_ack(method_frame.delivery_tag)
                 return body
         except pika.exceptions, err_msg:
-            log.msg(err_msg)
-            return False            
-            
+            log.error(err_msg)
+            return False
+
+
 log.startLogging(open('/opt/lv128/log/HTTPListener.log', 'w'))
 endpoints.serverFromString(reactor, "tcp:8812").listen(server.Site(HTTPListener()))
 reactor.run()
-
