@@ -5,7 +5,6 @@ from twisted.web import server, resource
 from twisted.python import log
 from twisted.internet import reactor, endpoints
 import pika
-from time import sleep
 
 QUEUE_HTTPLISTENER = "httplistener"
 QUEUE_VALIDATION = "validation.messages"
@@ -45,8 +44,6 @@ class HTTPListener(resource.Resource):
             token = token[0]
         triplet = ':'.join([uuid4().hex, token, message])
         self.send_msg(QUEUE_VALIDATION, triplet)
-        time.sleep(0.5)
-
         with open("/opt/lv128/log/validation_queue.log", "a+") as validation_file:
             validation_file.write(triplet + '\n')
         log.msg(message)
@@ -57,7 +54,6 @@ class HTTPListener(resource.Resource):
             code, msg = resp.split('|')
             request.setResponseCode(int(code))
             return msg
-
 
     def send_msg(self, my_queue, my_msg):
         self.channel.queue_declare(my_queue)
