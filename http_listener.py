@@ -5,8 +5,7 @@ from twisted.web import server, resource
 from twisted.python import log
 from twisted.internet import reactor, endpoints
 import pika
-#from time
-#from time import sleep
+from time import sleep
 
 QUEUE_HTTPLISTENER = "httplistener"
 QUEUE_VALIDATION = "validation.messages"
@@ -46,7 +45,7 @@ class HTTPListener(resource.Resource):
             token = token[0]
         triplet = ':'.join([uuid4().hex, token, message])
         self.send_msg(QUEUE_VALIDATION, triplet)
-        #time.sleep(0.3)
+        time.sleep(0.5)
 
         with open("/opt/lv128/log/validation_queue.log", "a+") as validation_file:
             validation_file.write(triplet + '\n')
